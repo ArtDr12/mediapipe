@@ -1,7 +1,8 @@
 import numpy as np
 import mediapipe as mp
 import cv2
-import uinput # на линуксе keyboard требует права администратора, нагуглил эту библиотеку
+from pynput.keyboard import Key, Controller # на линуксе keyboard требует права администратора, нагуглил эту библиотеку
+keyboard = Controller()
 
 def get_points(landmark, shape):
     points = []
@@ -41,12 +42,12 @@ while(cap.isOpened()):
             cv2.line(flippedRGB, (x_wrist, y_wrist), (x_wrist_old, y_wrist_old), (0, 255, 0), 2)
             if x_wrist - x_wrist_old > 50: # Определяется движение рукой если рука в кулаке
                 print('вправо') 
-                with uinput.Device([uinput.KEY_RIGHT]) as device:
-                    device.emit_click(uinput.KEY_RIGHT) 
+                keyboard.press(Key.right)
+                keyboard.release(Key.right)
             elif x_wrist - x_wrist_old < -50:
                 print('влево')
-                with uinput.Device([uinput.KEY_LEFT]) as device:
-                    device.emit_click(uinput.KEY_LEFT)
+                keyboard.press(Key.left)
+                keyboard.release(Key.left)
         else:
             cv2.circle(flippedRGB, (x_wrist, y_wrist), 10, (255, 0, 0), -1)
             cv2.line(flippedRGB, (x_wrist, y_wrist), (x_wrist_old, y_wrist_old), (255, 0, 0), 2)
