@@ -4,6 +4,8 @@ import cv2
 from pynput.keyboard import Key, Controller # на линуксе keyboard требует права администратора, нагуглил эту библиотеку
 keyboard = Controller()
 
+SENSITIVITY = 70
+
 def get_points(landmark, shape):
     points = []
     for mark in landmark:
@@ -40,11 +42,11 @@ while(cap.isOpened()):
         if 2 * r / ws < 1.5:
             cv2.circle(flippedRGB, (x_wrist, y_wrist), 10, (0, 255, 0), -1)
             cv2.line(flippedRGB, (x_wrist, y_wrist), (x_wrist_old, y_wrist_old), (0, 255, 0), 2)
-            if x_wrist - x_wrist_old > 50: # Определяется движение рукой если рука в кулаке
+            if x_wrist - x_wrist_old > SENSITIVITY: # Определяется движение рукой если рука в кулаке
                 print('вправо') 
                 keyboard.press(Key.right)
                 keyboard.release(Key.right)
-            elif x_wrist - x_wrist_old < -50:
+            elif x_wrist - x_wrist_old < -SENSITIVITY:
                 print('влево')
                 keyboard.press(Key.left)
                 keyboard.release(Key.left)
